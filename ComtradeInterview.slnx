@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="ComtradeInterview/ComtradeInterview.csproj" />
+  <Project Path="Application/Application.csproj" Id="fef860ef-30c8-4ff5-b072-3b9c4a20ce2a" />
+  <Project Path="ComtradeInterview/Api.csproj" />
+  <Project Path="Domain/Domain.csproj" Id="249ba5a8-f00d-4d80-98d4-8346710d29a6" />
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="ae8fdcc1-c86b-49a8-912b-b111931cf329" />
 </Solution>
