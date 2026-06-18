@@ -6,12 +6,12 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestSoapController(ISoapCustomerService soapService,ICountryInfoService countryService) : ControllerBase
+    public class TestSoapController(ICampaignValidationService soapService) : ControllerBase
     {
         [HttpGet("client/{id}")]
         public async Task<IActionResult> TestSoap(string id)
         {
-            var imeKorisnika = await soapService.GetCustomerNameByIdAsync(id);
+            var imeKorisnika = await soapService.ValidateTargetAsync(id);
 
             if (imeKorisnika == null)
             {
@@ -23,7 +23,7 @@ namespace Api.Controllers
         [HttpGet("country/{code}")]
         public async Task<IActionResult> TestCounry(string code)
         {
-            var imeDrzave = await countryService.GetCountryNameBy(code);
+            var imeDrzave = await soapService.ValidateTargetAsync(code);
 
             if (imeDrzave == null)
             {

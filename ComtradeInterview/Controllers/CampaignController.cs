@@ -32,7 +32,7 @@ namespace Api.Controllers
             return Ok(results);
         }
         [HttpPost("nominate")]
-        public async Task<IActionResult> NominateCustomer([FromBody]NominateCustomerDto dto)
+        public async Task<IActionResult> NominateCustomer([FromBody]NominateDto dto)
         {
             var agentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (agentIdClaim == null)
