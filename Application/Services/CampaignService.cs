@@ -75,7 +75,7 @@ namespace Application.Services
                 {
                     var purchase = new CampaignPurchase
                     {
-                        CustomerId = parts[0].Trim(),
+                        CustomerId = parts[0].Trim().ToUpper(),
                         Amount = decimal.Parse(parts[1].Trim(), CultureInfo.InvariantCulture),
                         PurchaseDate = DateTime.Parse(parts[2].Trim(), CultureInfo.InvariantCulture)
                     };
