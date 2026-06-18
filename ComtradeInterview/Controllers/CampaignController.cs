@@ -1,8 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ServiceModel.Channels;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -28,6 +30,18 @@ namespace Api.Controllers
 
             }
             return Ok(results);
+        }
+        [HttpPost("nominate")]
+        public async Task<IActionResult> NominateCustomer([FromBody]NominateCustomerDto dto)
+        {
+            var agentIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (agentIdClaim == null)
+            {
+                return Unauthorized(new { Message = "Nevazeci token agenta" });
+            }
+            int agentId=int.Parse(agentIdClaim.Value);
+            var resultMessage = await service.NominateCustomerAsync(agentId, dto);
+            return Ok(new { Message = resultMessage });
         }
     }
 }
