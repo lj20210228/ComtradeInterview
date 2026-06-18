@@ -26,7 +26,7 @@ namespace Application.Services
             var name = await soap.GetCustomerNameByIdAsync(dto.CustomerId);
             if (string.IsNullOrEmpty(name))
             {
-                throw new CustomerNotFoundException($"Kupac sa ID-jem '{dto.CustomerId}' ne postoji na eksternom SOAP sistemu.");
+                throw new NotFoundException($"Kupac sa ID-jem '{dto.CustomerId}' ne postoji na eksternom SOAP sistemu.");
             }
             var nomination = new Nomination
             {

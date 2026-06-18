@@ -69,6 +69,7 @@ builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ISoapCustomerService, SoapCustomerService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<ICountryInfoService, CountryInfoService>();
 
 var app = builder.Build();
 

@@ -25,7 +25,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         var statusCode = exception switch
         {
             CampaignLimitException => HttpStatusCode.BadRequest,
-            CustomerNotFoundException => HttpStatusCode.NotFound,
+            NotFoundException => HttpStatusCode.NotFound,
             _ => HttpStatusCode.InternalServerError
         };
 
