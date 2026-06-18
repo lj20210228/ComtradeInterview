@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using CountryServiceReference;
 using SOAPDemo;
 using System;
@@ -7,31 +8,19 @@ using System.Text;
 
 namespace Infrastructure.SoapServices
 {
-    public class CountryInfoService : ICountryInfoService
+    public class CountryInfoService : ICampaignValidationService
     {
-        public async Task<string?> GetCountryNameBy(string countryCode)
+       
+        public async Task<ValidationResultDto?> ValidateTargetAsync(string countryCode)
         {
-            using var countryClient = new CountryInfoServiceSoapTypeClient(
-                 CountryInfoServiceSoapTypeClient.EndpointConfiguration.CountryInfoServiceSoap
-            );
-            try
-            {
-                var countryName = await countryClient.CountryNameAsync(countryCode.Trim().ToUpper());
-                if (string.IsNullOrEmpty(countryName.Body.CountryNameResult))
-                {
-                    return null;
-                }
-                
-                Console.WriteLine($"Pronađena država: {countryName}");
-                return countryName.Body.CountryNameResult;
+            using var client = new CountryInfoServiceSoapTypeClient(CountryInfoServiceSoapTypeClient.EndpointConfiguration.CountryInfoServiceSoap);
+            var name = await client.CountryNameAsync(countryCode.Trim().ToUpper());
 
-            }
-            catch(Exception ex)
-            {
-                Console.Write($"Greska pri komunikaciji sa servisom:{ex.Message}");
+            if (string.IsNullOrEmpty(name.Body.CountryNameResult) || name.Body.CountryNameResult
+                .Contains("not found", StringComparison.OrdinalIgnoreCase))
                 return null;
-            }
 
+            return new ValidationResultDto { Identifier = countryCode.ToUpper(), Name = name.Body.CountryNameResult };
         }
     }
 }

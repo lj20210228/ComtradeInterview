@@ -9,36 +9,36 @@ using System.Text;
 
 namespace Application.Services
 {
-    public class CampaignService(ICampaignRepository repository, ISoapCustomerService soap) : ICampaignService
+    public class CampaignService(ICampaignRepository repository, ICampaignValidationService soap) : ICampaignService
     {
         public async Task<List<MonthlyReportDto>> GetCampaignResultAsync()
         {
             return await repository.GetCampaigntResultsDataAsync();
         }
 
-        public async Task<string> NominateCustomerAsync(int agentId, NominateCustomerDto dto)
+        public async Task<string> NominateCustomerAsync(int agentId, NominateDto dto)
         {
             int countToday = await repository.GetAgentNominationCountForTodayAsync(agentId);
             if (countToday >= 5)
             {
                 throw new CampaignLimitException("Ispunili ste maksimalni dnevni limit od 5 nominacija.");
             }
-            var name = await soap.GetCustomerNameByIdAsync(dto.CustomerId);
-            if (string.IsNullOrEmpty(name))
+            var result = await soap.ValidateTargetAsync(dto.Id);
+            if (string.IsNullOrEmpty(result.Name))
             {
-                throw new NotFoundException($"Kupac sa ID-jem '{dto.CustomerId}' ne postoji na eksternom SOAP sistemu.");
+                throw new NotFoundException($"Korisnik sa ID-jem '{dto.Id}' ne postoji na eksternom SOAP sistemu.");
             }
             var nomination = new Nomination
             {
                 AgentId = agentId,
-                CustomerId = dto.CustomerId,
-                CustomerName = name,
+                CustomerId = dto.Id,
+                CustomerName = result.Name,
                 NominatedAt = DateTime.UtcNow
             };
 
             await repository.AddNominationAsync(nomination);
 
-            return $"Kupac {name} je uspešno nominovan!";
+            return $"Kupac {result.Name} je uspešno nominovan!";
         }
 
         public async Task<string> UploadPurchasesCsvAsync(Stream fileStream)

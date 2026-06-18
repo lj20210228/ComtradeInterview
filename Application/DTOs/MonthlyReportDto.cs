@@ -8,8 +8,8 @@ namespace Application.DTOs
     {
         public int AgentId { get; set; }
         public string AgentName { get; set; }
-        public string CustomerId { get; set; }
-        public string CustomerName  { get; set; }
+        public string Id { get; set; }
+        public string Name  { get; set; }
         public bool HasPurchased { get; set; }
         public decimal TotalAmount { get; set; }
     }

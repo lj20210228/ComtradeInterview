@@ -66,10 +66,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
-builder.Services.AddScoped<ISoapCustomerService, SoapCustomerService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
-builder.Services.AddScoped<ICountryInfoService, CountryInfoService>();
+builder.Services.AddScoped<ICampaignValidationService, SoapCustomerService>();
+builder.Services.AddScoped<ICampaignValidationService, CountryInfoService>();
+
+
 
 var app = builder.Build();
 

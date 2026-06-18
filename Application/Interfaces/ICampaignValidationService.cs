@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Application.Interfaces
 {
-    public interface ISoapCustomerService
+    public interface ICampaignValidationService
     {
-        Task<string?> GetCustomerNameByIdAsync(string customerId)   ;
+        Task<ValidationResultDto?> ValidateTargetAsync(string identifier);
     }
 }

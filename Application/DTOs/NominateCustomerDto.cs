@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Application.DTOs
 {
-    public class NominateCustomerDto
+    public class NominateDto
     {
-        public string CustomerId { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
     }
 }

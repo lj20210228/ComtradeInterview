@@ -62,8 +62,8 @@ namespace Infrastructure.Repositories
                 {
                     AgentId = nomination.AgentId,
                     AgentName = nomination.Agent?.Name,
-                    CustomerId = nomination.CustomerId,
-                    CustomerName = nomination.CustomerName,
+                    Id = nomination.CustomerId,
+                    Name = nomination.CustomerName,
                     HasPurchased = hasPurchased,
                     TotalAmount = totalAmount
                 });
