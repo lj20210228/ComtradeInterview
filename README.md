@@ -21,6 +21,7 @@ Projekat je podeljen na četiri jasno razdvojena slojeva:
      "DefaultConnection": "Server=VAŠ_SERVER;Database=TelecomCampaign;Trusted_Connection=True;TrustServerCertificate=True;"
    }
 2. U package manager console ukucajte Update-Database
+3. U swaggeru mozete sve testirati na adresi: https://localhost:7284/swagger/index.html    (7284 je moj port, vi ubacite vas)
 
 ## Napomena
  U samom tekstu zadatka je navedeno ogranicenje od 5 unosa po agentu u toku dana, medju poslednjim commit-ovima dodao sam i ogranicenje
