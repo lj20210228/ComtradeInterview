@@ -8,7 +8,7 @@ namespace Application.Interfaces
 {
     public interface ICampaignRepository
     {
-        Task<int> GetAgentNominationCountForTodayAsync(int agentId);
+        Task<List<Nomination>> GetAgentNominationsForTodayAsync(int agentId);
         Task AddNominationAsync(Nomination nomination);
         Task AddPurchasesAsync(IEnumerable<CampaignPurchase> purchases);
         Task<List<Nomination>> GetAllNominationAsync();

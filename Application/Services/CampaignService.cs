@@ -5,6 +5,7 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Application.Services
@@ -18,16 +19,22 @@ namespace Application.Services
 
         public async Task<string> NominateCustomerAsync(int agentId, NominateDto dto)
         {
-            int countToday = await repository.GetAgentNominationCountForTodayAsync(agentId);
-            if (countToday >= 5)
+            List<Nomination> list = await repository.GetAgentNominationsForTodayAsync(agentId);
+
+            if (list.Count >= 5)
             {
                 throw new CampaignLimitException("Ispunili ste maksimalni dnevni limit od 5 nominacija.");
+            }
+            if (list.Exists(d => d.CustomerId == dto.Id))
+            {
+                throw new CampaignAlreadyExistException("Vec ste dodelili bonus ovom klijentu danas");
             }
             var result = await soap.ValidateTargetAsync(dto.Id);
             if (string.IsNullOrEmpty(result.Name))
             {
                 throw new NotFoundException($"Korisnik sa ID-jem '{dto.Id}' ne postoji na eksternom SOAP sistemu.");
             }
+
             var nomination = new Nomination
             {
                 AgentId = agentId,

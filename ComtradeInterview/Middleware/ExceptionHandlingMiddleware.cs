@@ -26,6 +26,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         {
             CampaignLimitException => HttpStatusCode.BadRequest,
             NotFoundException => HttpStatusCode.NotFound,
+            CampaignAlreadyExistException=> HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
 

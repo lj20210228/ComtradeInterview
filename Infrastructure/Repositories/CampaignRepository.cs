@@ -28,11 +28,10 @@ namespace Infrastructure.Repositories
             return await context.Agents.FirstOrDefaultAsync(a => a.Email == email);
         }
 
-        public async Task<int> GetAgentNominationCountForTodayAsync(int agentId)
+        public async Task<List<Nomination>> GetAgentNominationsForTodayAsync(int agentId)
         {
             var today = DateTime.UtcNow.Date;
-            return await context.Nominations
-                .CountAsync(n => n.AgentId == agentId && n.NominatedAt.Date == today);
+            return await context.Nominations.Where(n => n.AgentId == agentId && n.NominatedAt.Date == today).ToListAsync();
         }
 
         public async Task<List<Nomination>> GetAllNominationAsync()
@@ -50,24 +49,30 @@ namespace Infrastructure.Repositories
             var nominations = await context.Nominations
                 .Include(n => n.Agent)
                 .ToListAsync();
+
+            var purchases = await context.CampaignPurchases.ToListAsync();
+
             var report = new List<MonthlyReportDto>();
+
             foreach (var nomination in nominations)
             {
-                var hasPurchased=await context.Nominations
-                    .AnyAsync(p=>p.CustomerId == nomination.CustomerId);
-                var totalAmount=await context.CampaignPurchases
-                    .Where(p=>p.CustomerId==nomination.CustomerId)
-                    .SumAsync(p=>p.Amount);
+                var hasPurchased = purchases.Any(p => p.CustomerId == nomination.CustomerId);
+
+                var totalAmount = purchases
+                    .Where(p => p.CustomerId == nomination.CustomerId)
+                    .Sum(p => p.Amount);
+
                 report.Add(new MonthlyReportDto
                 {
                     AgentId = nomination.AgentId,
-                    AgentName = nomination.Agent?.Name,
-                    Id = nomination.CustomerId,
-                    Name = nomination.CustomerName,
+                    AgentName = nomination.Agent?.Name ?? "Nepoznat Agent",
+                    Id = nomination.CustomerId,       
+                    Name = nomination.CustomerName,   
                     HasPurchased = hasPurchased,
                     TotalAmount = totalAmount
                 });
             }
+
             return report;
         }
     }
