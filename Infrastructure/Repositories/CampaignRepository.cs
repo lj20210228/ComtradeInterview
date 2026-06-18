@@ -46,15 +46,22 @@ namespace Infrastructure.Repositories
 
         public async Task<List<MonthlyReportDto>> GetCampaigntResultsDataAsync()
         {
-            var nominations = await context.Nominations
+            var groupedNominations = await context.Nominations
                 .Include(n => n.Agent)
+                .GroupBy(n => new { n.CustomerId, n.CustomerName, n.AgentId, AgentName = n.Agent.Name })
+                .Select(g => new
+                {
+                    g.Key.CustomerId,
+                    g.Key.CustomerName,
+                    g.Key.AgentId,
+                    g.Key.AgentName
+                })
                 .ToListAsync();
 
             var purchases = await context.CampaignPurchases.ToListAsync();
-
             var report = new List<MonthlyReportDto>();
 
-            foreach (var nomination in nominations)
+            foreach (var nomination in groupedNominations)
             {
                 var hasPurchased = purchases.Any(p => p.CustomerId == nomination.CustomerId);
 
@@ -65,9 +72,9 @@ namespace Infrastructure.Repositories
                 report.Add(new MonthlyReportDto
                 {
                     AgentId = nomination.AgentId,
-                    AgentName = nomination.Agent?.Name ?? "Nepoznat Agent",
-                    Id = nomination.CustomerId,       
-                    Name = nomination.CustomerName,   
+                    AgentName = nomination.AgentName,
+                    Id = nomination.CustomerId,
+                    Name = nomination.CustomerName,
                     HasPurchased = hasPurchased,
                     TotalAmount = totalAmount
                 });
